@@ -1,0 +1,142 @@
+개발 환경 세팅 
+ - nodejs, vscode 설치 
+ - java jdk(v17), mysql(v8.0, MySQL Community) 설치, 
+  → 환경 변수 세팅까지 완료한 상태
+  → 따로 정리는 안함, 검색하면 많이 나오므로
+ - vscode 확장은 동일하게 세팅해도 되고 개인 세팅으로 가도 됨. 
+  → 스프링 환경을 위해 아래것들은 세팅해야함
+   - Extension Pack for Java 
+   - Java Language Support (자동완성 기능)
+   - Spring boot Extension Pack
+   - Gradle for Java
+   - MySQL(vscode에서 SQL 작성 가능)
+ - 스프링 부트는 여기선 2.7인데 여긴 3.2.3
+ - react는 기존 세팅(확장팩)해 놓은 거 그대로 사용.
+
+
+기능 설계 
+- api 인터페이스에 대해 기획을 해야 나중에 중구난방식의 개발이 되지 않음
+- api 기획(문서화)은 보통 스웨거함
+  - postman으로 문서화해도 됨 
+- interface.txt에 작성
+ -> 나중에 노션에 정리
+
+
+ERD/DDL/DCL 작성
+확장 설치
+ERD Editor 사용
+
+파일명 : 데이터베이스명.vuerd.json
+(ex) board.vuerd.json
+
+사용하기
+New Table 클릭해서 만들면된다.
+
+DDL, DML, DCL 개념 설명
+----
+DDL(Data Definition Language)
+데이터 정의어란? 데이터베이스를 정의하는 언어이며, 데이터를 생성, 수정, 삭제하는 등의 
+데이터의 전체의 골격을 결정하는 역할을 하는 언어이다.
+
+create : 데이터베이스, 테이블등을 생성
+alter : 테이블을 수정
+drop : 데이터베이스, 테이블을 삭제
+truncate : 테이블을 초기화
+※SCHEMA, DOMAIN, TABLE, VIEW, INDEX를 정의하거나 변경 또는 삭제할 때 사용하는 언어
+※데이터 베이스 관리자나 데이터베이스 설계자가 사용
+
+
+DML(Data Manipulation Language)
+데이터 조작어란? 정의된 데이터베이스에 입력된 레코드를 조회하거나 수정하거나 삭제하는 
+등의 역할을 하는 언어.
+
+select : 데이터 조회
+insert : 데이터 삽입
+update : 데이터 수정
+delete : 데이터 삭제
+※데이터베이스 사용자가 응용 프로그램이나 질의어를 통하여 저장된 데이터를 실질적으로 
+처리하는데 사용하는 언어
+
+※데이터베이스 사용자와 데이터베이스 관리 시스템 간의 인터페이스를 제공
+
+
+DCL(Data Control Language)
+데이터베이스에 접근하거나 객체에 권한을 주는등의 역할을 하는 언어
+
+grant : 특정 데이터베이스 사용자에게 특정 작업에 대한 수행 권한을 부여
+revoke : 특정 데이터베이스 사용자에게 특정 작업에 대한 수행 권한을 박탈, 회수
+commit : 트랜잭션의 작업을 저장
+rollback : 트랜잭션의 작업을 취소, 원래대로 복구
+----
+
+DDL, DCL 작성하기
+DATABASE 확장에서 제공하는 탭에서 
+Query 부분에 DDL, DCL 작성
+DDL은 ERD 작성하면 DDL 부분을 바로 볼 수 있다. 
+ - 게시물 번호(기본키)에 DEFAULT를 삭제해주고 나머지 게시물 번호에 
+   AUTO_INCREMENT를 넣어준다. 
+
+
+DML 작성
+DML도 동일하게 DATABASE 확장에서 제공하는 탭에서 Query 부분에서 작성함.
+
+
+사용자 계정 생성에 관련된 포스팅은 아래 참조
+ ㄴ https://highright96.tistory.com/61
+
+Operation CREATE USER failed for 에러는 아래 참조
+ ㄴ https://12teamtoday.tistory.com/53
+→ 이부분은 블러그에 정리(물론 디비 관련해서)
+
+
+
+-- 본격적인 프로젝트 구현 --
+프로젝트 생성 및 폴더 구조 설계
+ ㄴ 자세히 정리 할필요는 없고 필요한 부분만 정리
+ ㄴ 따라쳐보면서 스스로 익히기
+ ㄴ 리액트로 프론트엔드 구현하는 부분은 빨리 쳐보면서 넘어가기 (다 아는 내용이므로)
+
+
+ - 리액트로 프론트엔드 프로젝트 구성해준다. 
+ - 스프링 부트로 백엔드 프로젝트 구성해준다.
+  ㄴ jdk 설치 및 환경 변수 설정 및 mysql을 설치한 환경에서 진행 (설치방법 및 환경 변수 설정은 생략)
+  ㄴ Spring Initializr Java Support 확장으르 설치한 상태여야함 
+
+  스프링 부트 프로젝트 환경 구성하기 
+   - CTRL + p를 누르고 Spring Init을 입력해 
+     Spring Initializr: Create a Gradle Project를 클릭한다. 그 다음
+   - 스프링 부트 버전을 눌른다. (여기선 강의 달리 v3.2.3) 그 다음
+   - 그 다음 Group 작성: com.board  
+     -> Group은 도메인(회사 이름)을 가리킨다 
+     -> 회사명이 naver라면 com.naver (실제 url과 달리 역순임)
+     -> 물론 생략도 가능하긴 함 (근데 관례인듯 해서 ddh로 함)
+   - 그 다음 Artifact 작성:
+     -> 내가 빌드할 프로젝트의 결과물의 이름  
+     -> todolist란 프로젝트를 만들면 todolist가 Artifact로 작성해주면됨
+     -> 실제 sts로 직접 구성하면 Name 속성도 있는데 이건 보통 Artifact과 동일하게 작성함
+     -> 즉, 프로젝트명이라 생각하면됨
+   - Package Name
+     -> Group과 Artifact 전체를 가리켜 Package Name라고 함
+     -> 즉 이 프로젝트의 Package Name은 com.ddh.board_server임 
+     -> 이 Package Name은 java 폴더의 하위 폴더들임  
+   note) 만약 java 폴더(또는 파일) 수정한다면, 또는 잘 적용되지 않으면 vscode를 재로드해주기
+
+   이정도로하면 작업 환경 구성은 끝. 
+
+
+
+application.properties으로 구성 요소 작성
+ ㄴapplication.properties 파일 참고하기.
+ - 스프링에서 port를 정의하지 않으면 기본 포트는 8080임
+
+강사도 에러 무진장 내기 때문에 그냥 잼나게 해보자!
+
+spring boot 2.7 → spring boot 3.2 (3이상)
+ - java 17(jdk17 ↑)
+ - javax.* x → Jakarta.* 사용
+ - application.properties / application.yaml (use-legacy-processing 사용 불가, 여기선 상관없음)
+ - AntPathMatcher → PathPatternParser로 사용 (여기선 상관없음)
+ - 외부 라이브러리 사용시 Jakarta, Spring Framework 6.0 버전 지원 여부 확인
+  → javax.* x → Jakarta.* 둘이 호환이 안됨, 따라서 Jakarta에서 지원하는지 확인해야함
+  
+

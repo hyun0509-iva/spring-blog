@@ -1,0 +1,54 @@
+Spring Security (JWT Provider)
+
+1. Basic Authentication 
+  - 사용자 이름 / 비밀번호를 Base64로 인코딩하여 Authentication 헤더에 포함하여 전송됨 
+  - 매우 안전하지 않음, SSL/TLS와 함께 사용됨
+ Authentication: Basic ~ (인코딩된 내용) 형태로 헤더에 전달
+ 
+2. Bearer Token Authentication 
+  - 헤더에 토큰을 포함하여 전송 Authentication 헤더에 포함하여 전송
+  - JWT을 사용하여 인증
+  - 간단한 방식, 상태를 유지하지 않음(Serverless), 확장성이 높음
+  - 토큰 노출 위험, 토큰 관리 방식 중요
+   Authentication : Bearer ~ (토큰 내용)
+
+3. Oauth
+  - 토큰 기반 인증 방식, 사용자가 직접 자격을 증명 X, 미리 인증을 받아서 토큰을 발급 받고
+  - 이 토큰을 이용해 API를 요청하는 방식 (최근에는 Oauth 2.0 사용)
+   Kakao / Naver / Github / Google등
+
+4. API Key (주로 공공데이터에서 권한을 줄 때 사용)
+
+5. Session based Authentication(흔한 인증 방식, sessionId 발급)
+
+여기서 3번 Bearer Token Authentication 사용
+
+
+JWT(Json Web Token): 클레임이라고 불리는 정보를 JSON 형태로 안전하게 전송하기 위한 토큰 기반의 표준
+ - 인증과 정보 교환에 사용, 서명이 되어 있어서 신뢰성 확보가 가능
+ - jwt 구성 요소
+   1. Header : 토큰의 타입과 사용된 알고리즘 정보를 담고 있음, Base64Url로 인코딩
+   2. Payload : 클레임 정보, 대상, 발행자, 만료 시간등 다양한 정보가 포함됨, Base64Url로 인코딩
+   3. Signature: Header와 Payload, Secret key를 사용하여 생성된 서명
+
+ - 장점
+  - 상태 유지 X 
+  - 간단하고 자기 포함적
+  - 확장성 좋음 (발급받은 토큰으로 다른 서버에서 사용 가능, 단 동일한 Secret key 사용)
+ 
+ - 단점
+  - 크기 : 클레임이 많을 수록 토큰의 크기가 커짐
+  - 보안성이 떨어짐
+   -> 서명은 되어있지만 암호화는 되어 있지 않음, 중요한 정보를 JWT에 포함해서는 안됨
+  - 토큰 관리 : 만료 시간, 갱신을 잘해줘야 탈취당하지 않음
+   -> 보안장치로 reflesh 토큰을 추가로 발급
+
+
+JwtProvider, JwtAuthenticationFilter 작성하기
+ - 코드보면서 익히기
+JwtProvider : JWT 관련 메서드  
+JwtAuthenticationFilter : 헤더로 전달된 토큰을 추출 
+ - Bearer로 시작되는지, 토큰이 있는지를 필터링
+
+
+
